@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export const STORAGE_KEY = {
 	PROFILE: "profile",
 	NOTIFICATIONS: "notifications",
+	THEME: "theme",
 } as const;
 
 export const get = async <T>(key: string): Promise<T | null> => {

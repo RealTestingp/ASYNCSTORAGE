@@ -16,6 +16,7 @@ import {
 const Settings = () => {
 	const [notification, setNotification] = useState(true);
 	const [isLoading, setIsLoading] = useState(true);
+	const [darkMode, setDarkMode] = useState(false);
 
 	// Load saved notification preference on mount
 	useEffect(() => {
@@ -29,6 +30,12 @@ const Settings = () => {
 				// if we have a saved value, use it to set the state
 				setNotification(saved);
 			}
+			const savedDarkMode = await storage.get<boolean>(
+				storage.STORAGE_KEY.THEME,
+			);
+			if (savedDarkMode !== null) {
+				setDarkMode(savedDarkMode);
+			};
 			setIsLoading(false); // turning off the spinner
 		};
 		loadNotification();
@@ -38,6 +45,11 @@ const Settings = () => {
 		setNotification(value);
 		await storage.set(storage.STORAGE_KEY.NOTIFICATIONS, value);
 	};
+
+	const handleDarkModeToggle = async (value: boolean) => {
+		setDarkMode(value);
+		await storage.set(storage.STORAGE_KEY.THEME, value);
+	}
 
 	if (isLoading) {
 		return (
@@ -55,6 +67,12 @@ const Settings = () => {
 				title="Notifications"
 				subtitle="Enable app notifications"
 				right={<Switch value={notification} onValueChange={handleToggle} />}
+			/>
+
+			<AppCard
+				title="Dark Mode"
+				subtitle="Enable dark mode"
+				right={<Switch value={darkMode} onValueChange={handleDarkModeToggle} />}
 			/>
 
 			<Pressable onPress={() => router.push("/(tabs)/settings/profile")}>
